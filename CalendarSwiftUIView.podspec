@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
   s.name         = "CalendarSwiftUIView"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
   s.summary      = "A lib for calendar SwiftUI view"
   s.description  = <<-DESC
   A lib for calendar SwiftUI view use for special UI
   DESC
-  s.homepage     = "https://github.com/jokerphuongnam/CalendarSwiftUIView"
+  s.homepage     = "https://cocoapods.org/pods/CalendarSwiftUIView"
   s.license      = { :type => 'Apache License, Version 2.0', :text => <<-LICENSE
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
