@@ -1,6 +1,6 @@
 //
 //  CalendarView.swift
-//  iOSFootball2AM
+//  CalendarSwiftUIView
 //
 //  Created by P.Nam on 27/06/2023.
 //
@@ -40,7 +40,6 @@ public struct CalendarView<Header, SelectedBackground>: View where Header: View,
             
             calendarGrids
         }
-        .padding(.horizontal, 16)
     }
 }
 
