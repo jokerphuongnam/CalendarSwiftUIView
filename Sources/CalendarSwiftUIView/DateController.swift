@@ -11,25 +11,27 @@ import SwiftUI
 internal final class DateController: ObservableObject {
     private var calendarUtil: CalendarUtil
     @Binding var date: Date
+    @Binding var selectedDate: Date
     @Published var dates: [Date]
-    @Published var selectedDate: Date = Date()
     
     var monthYearString: String {
         calendarUtil.monthYearString(date)
     }
     
-    private init(calendarUtil: CalendarUtil, date: Binding<Date>, dates: [Date]) {
+    private init(calendarUtil: CalendarUtil, date: Binding<Date>, selectedDate: Binding<Date>, dates: [Date]) {
         self.calendarUtil = calendarUtil
         self._date = date
+        self._selectedDate = selectedDate
         self.dates = dates
     }
     
-    convenience init(selectedDate: Binding<Date>) {
+    convenience init(date: Binding<Date>, selectedDate: Binding<Date>) {
         let calendarUtil = CalendarUtil()
-        let currentDate = selectedDate.wrappedValue
+        let currentDate = date.wrappedValue
         self.init(
             calendarUtil: calendarUtil,
-            date: selectedDate,
+            date: date,
+            selectedDate: selectedDate,
             dates: [calendarUtil.minusMonth(currentDate), currentDate, calendarUtil.plusMonth(currentDate)]
         )
     }

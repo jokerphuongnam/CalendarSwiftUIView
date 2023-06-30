@@ -9,24 +9,26 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 internal struct PagingView<Content>: View where Content: View {
-    @StateObject private var controller: PagingController
     @Binding private var index: Int
     private let count: Int
     @State private var offset: CGFloat = 0
     @State private var isGestureActive: Bool = false
     private let content: (_ index: Int) -> Content
-    @State private var currentIndex = 0
+    @State private var currentIndex: Int
     var getScrollProxy: ((ScrollViewProxy) -> Void)?
     
     var body: some View {
         GeometryReader { proxy in
             ScrollViewReader { scrollViewProxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(alignment: .center, spacing: 0) {
+                    HStack(alignment: .center, spacing: 0) {
                         ForEach(0..<count, id: \.self) { index in
                             content(index)
                                 .frame(width: proxy.size.width, height: nil)
                                 .id(index)
+                        }
+                        .onAppear {
+                            scrollViewProxy.scrollTo(Int(count / 2), anchor: .center)
                         }
                     }
                     .overlay(
@@ -39,20 +41,20 @@ internal struct PagingView<Content>: View where Content: View {
                     let offsetX = -offset.x
                     if offsetX != 0 {
                         let index = Int(proxy.size.width / offsetX)
-                        if (0..<count).contains(index) {
+                        if (0..<count).contains(index), currentIndex != count - index - 1 {
                             currentIndex = count - index - 1
+                            withAnimation(.linear(duration: 0.3)) {
+                                scrollViewProxy.scrollTo(currentIndex)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                self.index = currentIndex
+                                scrollViewProxy.scrollTo(1)
+                            }
                         }
                     }
                 }
                 .onAppear {
-                    controller.reset = {
-                        index = currentIndex
-                        scrollViewProxy.scrollTo(1)
-                    }
-                    scrollViewProxy.scrollTo(index)
                     getScrollProxy?(scrollViewProxy)
-                    UIScrollView.appearance().isPagingEnabled = true
-                    UIScrollView.appearance().delegate = controller
                 }
             }
         }
@@ -60,30 +62,12 @@ internal struct PagingView<Content>: View where Content: View {
 }
 
 @available(iOS 14.0, *)
-internal extension PagingView {
+extension PagingView {
     init(index: Binding<Int>, count: Int, @ViewBuilder content: @escaping (_ index: Int) -> Content) {
-        self.init(controller: PagingController(completion: nil), index: index, count: count, content: content, getScrollProxy: nil)
-        currentIndex = index.wrappedValue
+        self.init(index: index, count: count, content: content, currentIndex: index.wrappedValue, getScrollProxy: nil)
     }
     
     func getScrollProxy(perform getScrollProxy: ((ScrollViewProxy) -> Void)? = nil) -> Self {
-        .init(controller: controller, index: _index, count: count, content: content, getScrollProxy: getScrollProxy)
-    }
-}
-
-@available(iOS 13.0, *)
-private final class PagingController: NSObject, ObservableObject {
-    private let completion: (() -> Void)?
-    var reset: (() -> Void)?
-    
-    init(completion: (() -> Void)?) {
-        self.completion = completion
-    }
-}
-
-@available(iOS 13.0, *)
-extension PagingController: UIScrollViewDelegate {
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        reset?()
+        .init(index: _index, count: count, content: content, currentIndex: currentIndex, getScrollProxy: getScrollProxy)
     }
 }

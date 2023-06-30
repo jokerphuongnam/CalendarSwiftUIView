@@ -139,13 +139,14 @@ private extension CalendarView {
 }
 
 @available(iOS 14.0, *)
-public extension CalendarView where SelectedBackground == Circle {
+extension CalendarView where SelectedBackground == Circle {
     init(
+        date: Binding<Date>,
         selectedDate: Binding<Date>,
         @ViewBuilder header: @escaping (_ prevAction: @escaping () -> Void, _ nextAction: @escaping () -> Void) -> Header
     ) {
         self.init(
-            controller: DateController(selectedDate: selectedDate),
+            controller: DateController(date: date, selectedDate: selectedDate),
             weekStartCalendar: nil,
             dayOfWeek: nil,
             header: header,
@@ -164,13 +165,14 @@ public extension CalendarView where SelectedBackground == Circle {
 }
 
 @available(iOS 14.0, *)
-public extension CalendarView {
+extension CalendarView {
     init(
+        date: Binding<Date>,
         selectedDate: Binding<Date>,
         @ViewBuilder header: @escaping (_ prevAction: @escaping () -> Void, _ nextAction: @escaping () -> Void) -> Header
     ) {
         self.init(
-            controller: DateController(selectedDate: selectedDate),
+            controller: DateController(date: date, selectedDate: selectedDate),
             weekStartCalendar: nil,
             dayOfWeek: nil,
             header: header,
@@ -189,7 +191,7 @@ public extension CalendarView {
 }
 
 @available(iOS 14.0, *)
-public extension CalendarView {
+extension CalendarView {
     func weekStartCalendar(_ weekStartCalendar: WeekStartCalendar? = nil) -> Self {
         .init(
             controller: controller,

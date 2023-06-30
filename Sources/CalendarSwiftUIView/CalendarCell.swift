@@ -28,33 +28,33 @@ internal struct CalendarCell<SelectedBackground>: View where SelectedBackground:
     
     var body: some View {
         let monthStruct = monthStruct
-        Button {
-            switch monthStruct.monthType {
-            case .previous:
-                let prevMonth = controller.prevMonth(of: controller.date)
-                let dayChange = controller.modifyDay(of: prevMonth, to: monthStruct.dayInt)
-                controller.selectedDate = dayChange
-                modifyMonthCompletion?(-1)
-            case .current:
-                controller.selectedDate = controller.modifyDay(of: controller.date, to: monthStruct.dayInt)
-            case .next:
-                let nextMonth = controller.nextMonth(of: controller.date)
-                let dayChange = controller.modifyDay(of: nextMonth, to: monthStruct.dayInt)
-                controller.selectedDate = dayChange
-                modifyMonthCompletion?(1)
-            }
-        } label: {
-            let text = Text(monthStruct.day)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .aspectRatio(1, contentMode: .fit)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(itemPadding)
-            if isSelected(monthStruct) {
-                text
-                    .font(selectedFont)
-                    .foregroundColor(selectedColor)
-                    .background(selectedBackground?())
-            } else {
+        let text = Text(monthStruct.day)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .aspectRatio(1, contentMode: .fit)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(itemPadding)
+        if isSelected(monthStruct) {
+            text
+                .font(selectedFont)
+                .foregroundColor(selectedColor)
+                .background(selectedBackground?())
+        } else {
+            Button {
+                switch monthStruct.monthType {
+                case .previous:
+                    let prevMonth = controller.prevMonth(of: controller.date)
+                    let dayChange = controller.modifyDay(of: prevMonth, to: monthStruct.dayInt)
+                    controller.selectedDate = dayChange
+                    modifyMonthCompletion?(-1)
+                case .current:
+                    controller.selectedDate = controller.modifyDay(of: controller.date, to: monthStruct.dayInt)
+                case .next:
+                    let nextMonth = controller.nextMonth(of: controller.date)
+                    let dayChange = controller.modifyDay(of: nextMonth, to: monthStruct.dayInt)
+                    controller.selectedDate = dayChange
+                    modifyMonthCompletion?(1)
+                }
+            } label: {
                 text
                     .padding(1)
                     .font(unSelectedFont)
