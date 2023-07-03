@@ -40,6 +40,9 @@ public struct CalendarView<Header, SelectedBackground>: View where Header: View,
             
             calendarGrids
         }
+        .onAppear {
+            controller.date = controller.selectedDate
+        }
     }
 }
 

@@ -27,7 +27,7 @@ internal final class DateController: ObservableObject {
     
     convenience init(date: Binding<Date>, selectedDate: Binding<Date>) {
         let calendarUtil = CalendarUtil()
-        let currentDate = date.wrappedValue
+        let currentDate = selectedDate.wrappedValue
         self.init(
             calendarUtil: calendarUtil,
             date: date,
