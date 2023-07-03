@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CalendarSwiftUIView"
-  s.version      = "1.0.8"
+  s.version      = "1.0.9"
   s.summary      = "A lib for calendar SwiftUI view"
   s.description  = <<-DESC
   A lib for calendar SwiftUI view use for special UI
