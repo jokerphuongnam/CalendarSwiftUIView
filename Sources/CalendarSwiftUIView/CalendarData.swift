@@ -51,8 +51,8 @@ public enum WeekStartCalendar {
     }
 }
 
-public extension WeekStartCalendar {
-    struct DayOfWeek {
+extension WeekStartCalendar {
+    public struct DayOfWeek {
         let sunday: String
         let monday: String
         let tuesday: String
