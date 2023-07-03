@@ -28,9 +28,6 @@ internal struct PagingView<Content>: View where Content: View {
                                 .frame(width: proxy.size.width, height: nil)
                                 .id(index)
                         }
-                        .onAppear {
-                            scrollViewProxy.scrollTo(Int(count / 2), anchor: .center)
-                        }
                     }
                     .overlay(
                         GeometryReader { proxy in
@@ -42,19 +39,22 @@ internal struct PagingView<Content>: View where Content: View {
                     let offsetX = -offset.x
                     if offsetX != 0 {
                         let index = Int(proxy.size.width / offsetX)
-                        if (0..<count).contains(index), currentIndex != count - index - 1 {
+                        if isAppear, (0..<count).contains(index), currentIndex != count - index - 1 {
                             currentIndex = count - index - 1
-                            if isAppear {
-                                withAnimation(.linear(duration: 0.3)) {
-                                    scrollViewProxy.scrollTo(currentIndex)
-                                }
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    self.index = currentIndex
+                            withAnimation(.linear(duration: 0.3)) {
+                                scrollViewProxy.scrollTo(currentIndex)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                self.index = currentIndex
+                                scrollViewProxy.scrollTo(1)
+                            }
+                        } else {
+                            if !isAppear {
+                                if count - index - 1 == 1 {
+                                    isAppear = true
+                                } else {
                                     scrollViewProxy.scrollTo(1)
                                 }
-                            } else if currentIndex == 1 {
-                                isAppear = true
                             }
                         }
                     }
