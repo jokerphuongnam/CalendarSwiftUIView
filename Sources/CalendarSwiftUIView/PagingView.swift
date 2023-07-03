@@ -9,10 +9,11 @@ import SwiftUI
 
 @available(iOS 14.0, *)
 internal struct PagingView<Content>: View where Content: View {
-    @Binding private var index: Int
-    private let count: Int
     @State private var offset: CGFloat = 0
     @State private var isGestureActive: Bool = false
+    @State private var isAppear = false
+    @Binding private var index: Int
+    private let count: Int
     private let content: (_ index: Int) -> Content
     @State private var currentIndex: Int
     var getScrollProxy: ((ScrollViewProxy) -> Void)?
@@ -43,12 +44,17 @@ internal struct PagingView<Content>: View where Content: View {
                         let index = Int(proxy.size.width / offsetX)
                         if (0..<count).contains(index), currentIndex != count - index - 1 {
                             currentIndex = count - index - 1
-                            withAnimation(.linear(duration: 0.3)) {
-                                scrollViewProxy.scrollTo(currentIndex)
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                self.index = currentIndex
-                                scrollViewProxy.scrollTo(1)
+                            if isAppear {
+                                withAnimation(.linear(duration: 0.3)) {
+                                    scrollViewProxy.scrollTo(currentIndex)
+                                }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    self.index = currentIndex
+                                    scrollViewProxy.scrollTo(1)
+                                }
+                            } else if currentIndex == 1 {
+                                isAppear = true
                             }
                         }
                     }
