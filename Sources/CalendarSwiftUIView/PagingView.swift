@@ -62,7 +62,7 @@ internal struct PagingView<Content>: View where Content: View {
 }
 
 @available(iOS 14.0, *)
-extension PagingView {
+internal extension PagingView {
     init(index: Binding<Int>, count: Int, @ViewBuilder content: @escaping (_ index: Int) -> Content) {
         self.init(index: index, count: count, content: content, currentIndex: index.wrappedValue, getScrollProxy: nil)
     }

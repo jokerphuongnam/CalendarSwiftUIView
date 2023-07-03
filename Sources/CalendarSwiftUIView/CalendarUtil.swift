@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class CalendarUtil {
+internal final class CalendarUtil {
     let calendar = Calendar.current
     let dateFormatter = DateFormatter()
     
